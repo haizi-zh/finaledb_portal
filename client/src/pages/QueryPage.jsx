@@ -590,7 +590,7 @@ class FormElements extends Component {
                         </Grid.Row>
                       </Table.Col>
                     </Table.Row>
-                    <Table.Row>
+                    {/* <Table.Row>
                       <Table.Col>
                         <Grid.Row>
                           <Grid.Col width={1} size="sm" className="mt-6">
@@ -645,7 +645,7 @@ class FormElements extends Component {
                           </Grid.Col>
                         </Grid.Row>
                       </Table.Col>
-                    </Table.Row>
+                    </Table.Row> */}
                     <GetDiseases
                       diseaseSummary={summary.disease}
                       checkedDisease={queryTerms.disease}
