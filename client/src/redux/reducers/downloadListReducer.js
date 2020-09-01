@@ -86,21 +86,21 @@ function addDownloadItems(state, entries) {
     //     key: item.key,
     //     checked: true,
     //   };
-    if (item.type === 'bedGraph' && item.desc === 'coverage')
+    if (item.type === 'bigWig' && item.desc === 'coverage')
       return {
         desc: `Fragment coverage (${assembly})`,
         url: `${s3Bucket}/${item.key}`,
         key: item.key,
         checked: true,
       };
-    if (item.type === 'bedGraph' && item.desc === 'fragment profile')
+    if (item.type === 'bigWig' && item.desc === 'fragment profile')
       return {
         desc: `Fragment size profile (${assembly})`,
         url: `${s3Bucket}/${item.key}`,
         key: item.key,
         checked: true,
       };
-    if (item.type === 'bedGraph' && item.desc === 'WPS')
+    if (item.type === 'bigWig' && item.desc === 'WPS')
       return {
         desc: `Windowed Protection Score (WPS) (${assembly})`,
         url: `${s3Bucket}/${item.key}`,
