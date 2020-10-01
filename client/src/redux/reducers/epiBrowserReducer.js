@@ -33,7 +33,9 @@ const initialState = {
   dataCache: {},
   // // initial display region
   // displayRegion: 'chr2:29028122-29057276',
-  displayRegion: 'chr11:19713334-20121601',
+  displayRegion: 'chr12:25204788-25250931',
+  // Whether display full tracks
+  allowFull: false,
 };
 
 // Each entry may have multiple analysis entities, or tracks, however,
@@ -324,6 +326,11 @@ export default (state = initialState, action) => {
       const { externalTracks } = action.payload;
       const { revision } = state;
       return { ...state, externalTracks, revision: revision + 1 };
+    }
+    case 'TOGGLE_ALLOW_FULL_TRACKS': {
+      const { allowFull } = action.payload;
+      const { revision } = state;
+      return { ...state, allowFull, revision: revision + 1 };
     }
     default:
       break;

@@ -721,7 +721,7 @@ class FormElements extends Component {
               {selectedEntries.length <= 3 ? null : (
                 <Grid.Row className="mx-1 mb-2">
                   <Form.StaticText className="text-danger">
-                    {`You have selected ${selectedEntries.length} items, which may impact the Epigenome Browser's performance. Thus only the first 3 items will be visualized.`}
+                    {`You have selected ${selectedEntries.length} items, which may impact the Epigenome Browser's performance.`}
                   </Form.StaticText>
                 </Grid.Row>
               )}

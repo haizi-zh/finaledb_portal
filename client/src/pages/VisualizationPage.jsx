@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { Page, Card, Grid, Table, Form } from 'tabler-react';
+import { Alert } from 'react-bootstrap';
 
 import { connect } from 'react-redux';
 import log from 'loglevel';
@@ -11,6 +12,7 @@ import PropTypes from 'prop-types';
 import {
   resetBrowserEntries,
   fetchFragmentSizeSeries,
+  toggleAllowFullTracks,
   // setFragmentSizeSeries,
   setDisplayRegion,
 } from '../redux/actions/epiBrowserActions';
@@ -22,6 +24,42 @@ import SamplesTable from '../components/SamplesTable';
 import EpiBrowser from '../containers/EpiBrowser';
 import EpiBrowserSessionUploader from '../containers/EpiBrowserSessionUploader';
 import Charts from '../components/FragmentSizesChart';
+
+// By default, the epibrowser only displays the first 10 tracks, due to performance concerns.
+// However, users can elect to make it disply all tracks by toggling this switch
+const FullEpiBrowserToggler = ({ tracks, allowFull, onChange }) => {
+  const nTracks = Object.keys(tracks).length;
+  if (nTracks > 10) {
+    const label = `By default, the epibrowser only displays the first 10 tracks, due to performance concerns. Your selected sample set contains ${nTracks} tracks. Displaying all of them may have an impact on the browser performance. Do you want to proceed anyway?`;
+    return (
+      <div>
+        <Alert variant="warning">
+          <div style={{ marginBottom: 16 }}>{label}</div>
+          <Form.Checkbox
+            isInline
+            checked={allowFull}
+            label="Yes, display all the tracks"
+            // name="allow-full-inline-checkboxes"
+            value="allowFull"
+            onChange={(e) => {
+              const {
+                target: { value, checked },
+              } = e;
+              onChange(value, checked);
+            }}
+          />
+        </Alert>
+      </div>
+    );
+  }
+  return null;
+};
+
+FullEpiBrowserToggler.propTypes = {
+  tracks: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  allowFull: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 class FormElements extends Component {
   componentDidMount() {
@@ -47,7 +85,8 @@ class FormElements extends Component {
     };
     dispatchResetBrowserEntries(
       defaultAssembly,
-      selectedEntries.slice(0, 3),
+      // selectedEntries.slice(0, 3),
+      selectedEntries,
       callback
     );
   }
@@ -68,15 +107,31 @@ class FormElements extends Component {
     dispatchResetBrowserEntries(assembly, entries, callback);
   };
 
+  updateAllowFull = (value, checked) => {
+    const {
+      allowFull,
+      dispatchToggleAllowFullTracks,
+      dispatchResetBrowserEntries,
+      assembly,
+      entries,
+    } = this.props;
+    if (allowFull !== checked) {
+      dispatchToggleAllowFullTracks(checked);
+      dispatchResetBrowserEntries(assembly, entries);
+    }
+  };
+
   shouldComponentUpdate = (nextProps) => {
     const {
       assembly,
+      allowFull,
       entries,
       fragSizeSeries,
       downloads: { downloadList },
     } = this.props;
     const {
       assembly: nextAssembly,
+      allowFull: nextAllowFull,
       entries: nextEntries,
       fragSizeSeries: nextFragSizeSeries,
       downloads: { downloadList: nextDownloadList },
@@ -84,6 +139,7 @@ class FormElements extends Component {
 
     const shouldUpdate =
       assembly !== nextAssembly ||
+      allowFull !== nextAllowFull ||
       downloadList !== nextDownloadList ||
       JSON.stringify(entries.map((entry) => entry.id).sort()) !==
         JSON.stringify(nextEntries.map((entry) => entry.id).sort()) ||
@@ -115,6 +171,8 @@ class FormElements extends Component {
     const samples = [];
     const {
       entries,
+      tracks,
+      allowFull,
       displayedEntryIds,
       assembly,
       // dispatchSetFragSize,
@@ -196,6 +254,16 @@ class FormElements extends Component {
           </Grid.Row>
 
           <Grid.Row>
+            <Grid.Col width={12}>
+              <FullEpiBrowserToggler
+                tracks={tracks}
+                allowFull={allowFull}
+                onChange={this.updateAllowFull}
+              />
+            </Grid.Col>
+          </Grid.Row>
+
+          <Grid.Row>
             <Grid.Col>
               <Card>
                 <EpiBrowser />
@@ -218,6 +286,8 @@ FormElements.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ),
+  tracks: PropTypes.arrayOf(PropTypes.shape()),
+  allowFull: PropTypes.bool,
   assembly: PropTypes.string.isRequired,
   entries: PropTypes.arrayOf(PropTypes.shape()),
 
@@ -228,6 +298,7 @@ FormElements.propTypes = {
   displayedEntryIds: PropTypes.arrayOf(PropTypes.string),
   dispatchResetBrowserEntries: PropTypes.func.isRequired,
   dispatchFetchFragmentSizeSeries: PropTypes.func.isRequired,
+  dispatchToggleAllowFullTracks: PropTypes.func.isRequired,
   // dispatchSetDisplayRegion: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -241,12 +312,16 @@ FormElements.propTypes = {
 
 FormElements.defaultProps = {
   fragSizeSeries: [],
+  tracks: [],
+  allowFull: false,
   displayedEntryIds: [],
   entries: [],
 };
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchSetDisplayRegion: (region) => dispatch(setDisplayRegion(region)),
+  dispatchToggleAllowFullTracks: (allowFull) =>
+    dispatch(toggleAllowFullTracks(allowFull)),
   dispatchResetBrowserEntries: (assembly, entries, callback) =>
     dispatch(resetBrowserEntries(assembly, entries, callback)),
   dispatchFetchFragmentSizeSeries: (fragSizeSeries) =>

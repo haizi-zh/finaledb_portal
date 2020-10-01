@@ -75,66 +75,6 @@ const SamplesTableRow = ({
     (item) => item.entry.id === entry.id
   );
 
-  // const genDownloadList = (downloadedEntry) => {
-  //   const fileLists = (selectedAssembly
-  //     ? [selectedAssembly]
-  //     : ['hg19', 'hg38']
-  //   ).map((assembly) =>
-  //     ((downloadedEntry.analysis || {})[assembly] || []).reduce((acc, item) => {
-  //       if (item.type === 'txt' && item.desc === 'fragment size')
-  //         return [
-  //           ...acc,
-  //           {
-  //             desc: `Fragment size distribution (${assembly})`,
-  //             url: `${s3Bucket}/${item.key}`,
-  //           },
-  //         ];
-  //       if (item.type === 'bedGraph' && item.desc === 'coverage')
-  //         return [
-  //           ...acc,
-  //           {
-  //             desc: `Fragment coverage (${assembly})`,
-  //             url: `${s3Bucket}/${item.key}`,
-  //           },
-  //         ];
-  //       if (item.type === 'bedGraph' && item.desc === 'fragment profile')
-  //         return [
-  //           ...acc,
-  //           {
-  //             desc: `Fragment size profile (${assembly})`,
-  //             url: `${s3Bucket}/${item.key}`,
-  //           },
-  //         ];
-  //       if (item.type === 'bedGraph' && item.desc === 'WPS')
-  //         return [
-  //           ...acc,
-  //           {
-  //             desc: `Windowed Protection Score (WPS) (${assembly})`,
-  //             url: `${s3Bucket}/${item.key}`,
-  //           },
-  //         ];
-  //       if (item.type === 'tsv' && item.desc === 'fragment')
-  //         return [
-  //           ...acc,
-  //           {
-  //             desc: `Fragment .tsv file (${assembly})`,
-  //             url: `${s3Bucket}/${item.key}`,
-  //           },
-  //         ];
-
-  //       return acc;
-  //     }, [])
-  //   );
-  //   console.log(fileLists);
-  //   return fileLists[0].concat(fileLists[1] || []).map((item) => ({
-  //     value: (
-  //       <a href={item.url} download _target="blank" rel="noreferrer">
-  //         {item.desc}
-  //       </a>
-  //     ),
-  //   }));
-  // };
-
   return (
     <Table.Row style={isQuery && isSelected ? { background: 'lavender' } : {}}>
       {isQuery ? (

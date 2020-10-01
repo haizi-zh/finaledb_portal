@@ -57,3 +57,8 @@ export const setExternalTracks = (externalTracks) => ({
   type: 'SET_EXTERNAL_TRACKS',
   payload: { externalTracks },
 });
+
+export const toggleAllowFullTracks = (allowFull) => ({
+  type: 'TOGGLE_ALLOW_FULL_TRACKS',
+  payload: { allowFull },
+});

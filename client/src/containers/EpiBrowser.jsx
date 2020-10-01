@@ -124,6 +124,7 @@ class EpiBrowser extends React.Component {
       refTracks,
       externalTracks,
       tracks,
+      allowFull,
     } = props;
     log.info(`Render browser: ${assembly} : ${displayRegion}`);
 
@@ -139,7 +140,10 @@ class EpiBrowser extends React.Component {
       displayRegion,
       trackLegendWidth: 120,
       isShowingNavigator: true,
-      tracks: refTracks.concat(externalTracks, tracks),
+      tracks: refTracks.concat(
+        externalTracks,
+        allowFull ? tracks : tracks.slice(0, 10)
+      ),
       metadataTerms: ['Sample'],
       regionSets: [],
       regionSetViewIndex: -1,
