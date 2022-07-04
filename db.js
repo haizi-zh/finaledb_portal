@@ -1,13 +1,12 @@
 const { Sequelize } = require('sequelize');
 
-const dbName = process.env.FINALEDB_NAME || 'cfdnadb';
-const dbUser = process.env.FINALEDB_USER || 'zhu1lx';
+const dbName = process.env.FINALEDB_NAME; 
+const dbUser = process.env.FINALEDB_USER;
 const dbPass = process.env.FINALEDB_PASSWORD;
+const dbHost = process.env.FINALEDB_HOST;
 
 const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-  host:
-    process.env.CFDNA_DB_HOST ||
-    'cfdna.cbfjin2vxldo.us-east-2.rds.amazonaws.com',
+  host: dbHost,
   dialect: 'postgres',
   pool: {
     max: 5,
